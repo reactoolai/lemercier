@@ -1,4 +1,4 @@
-export default function Footer({ goAdmin, goShop, goAbout }) {
+export default function Footer({ goShop, goAbout }) {
   return (
     <footer className="ftr">
       <div className="ftr-top">
@@ -59,8 +59,11 @@ export default function Footer({ goAdmin, goShop, goAbout }) {
           <div className="ftr-bottom-links">
             <span>Politique de confidentialité</span>
             <span>Livraison et retour</span>
-            <span onClick={goAdmin}>Admin</span>
           </div>
+          <a className="ftr-powered" href="https://reactool.ai" target="_blank" rel="noopener noreferrer" aria-label="Propulsé par Reactool AI">
+            <span>Propulsé par</span>
+            <img src="/logo_blanc_reactool_ai.png" alt="Reactool AI" />
+          </a>
         </div>
       </div>
     </footer>

@@ -163,7 +163,7 @@ export default function App() {
       {view === 'wish' && <Wishlist {...nav} />}
       {view === 'about' && <About {...nav} />}
       {view === 'admin' && <Admin {...nav} />}
-      <Footer goAdmin={nav.goAdmin} goShop={nav.goShop} goAbout={nav.goAbout} />
+      <Footer goShop={nav.goShop} goAbout={nav.goAbout} />
       {cartOpen && <CartDrawer cart={cart} remove={nav.removeFromCart} close={() => setCartOpen(false)} />}
       {editingProduct && <ProductEditModal product={editingProduct} onSaved={handleProductSaved} onClose={() => setEditingProduct(null)} />}
     </div>
