@@ -4,6 +4,7 @@ import { fetchProducts, supabase } from '../lib/supabase.js';
 import ProductCard from '../components/ProductCard.jsx';
 
 const FEATURED_IDS = ['09S15PSP', '05S7BHTP'];
+const HIDDEN_IDS = ['08149', '08149X'];
 
 const CATEGORY_TILES = [
   'Chemises',
@@ -48,7 +49,7 @@ export default function Home(nav) {
         sizes: Array.isArray(p.sizes) ? p.sizes : [],
         gallery: Array.isArray(p.gallery) ? p.gallery : [],
       }));
-      const rest = (res.products || []).filter(p => !FEATURED_IDS.includes(p.id));
+      const rest = (res.products || []).filter(p => !FEATURED_IDS.includes(p.id) && !HIDDEN_IDS.includes(p.id));
       setFeatured([...featured, ...rest].slice(0, 8));
     }).catch(() => {});
   }, [productRefreshKey]);
