@@ -252,9 +252,14 @@ export default function Home(nav) {
           </div>
           <div className="split-r">
             <div className="split-tag">NOUS JOINDRE</div>
-            <div>Adresse à confirmer, Alma (Québec)</div>
-            <div>Lun–Mer 9h30 à 17h30 · Jeu–Ven 9h30 à 21h</div>
-            <div>Sam 9h30 à 17h · Dim 12h à 16h</div>
+            <div>630 Rue Sacré-Coeur O, Alma (Québec)</div>
+            <div><a href="tel:+14186623240" style={{ color: '#C6CEDD', textDecoration: 'none' }}>(418) 662-3240</a></div>
+            <div className="split-hours">
+              <span><span className="split-hours-day">Lun–Mer</span> 9h30–17h30</span>
+              <span><span className="split-hours-day">Jeu–Ven</span> 9h30–21h</span>
+              <span><span className="split-hours-day">Sam</span> 9h30–17h</span>
+              <span><span className="split-hours-day">Dim</span> 12h–16h</span>
+            </div>
           </div>
         </div>
       </section>

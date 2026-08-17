@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { fmt } from '../data/products.js';
 import { supabase, fetchProductById } from '../lib/supabase.js';
+import { setProductSEO, resetSEO } from '../lib/seo.js';
 import ProductCard from '../components/ProductCard.jsx';
 
 export default function Product(nav) {
@@ -27,6 +28,7 @@ export default function Product(nav) {
     fetchProductById(pid).then(full => {
       if (full) {
         setP(full);
+        setProductSEO(full);
         supabase.from('product_variants').select('*').eq('product_id', full.id).order('created_at', { ascending: true }).then(({ data, error }) => {
           if (!error && data) {
             const mapped = data.map(v => ({
@@ -46,6 +48,10 @@ export default function Product(nav) {
       }
     });
   }, [pid, productRefreshKey]);
+
+  useEffect(() => {
+    return () => resetSEO();
+  }, []);
 
   const currentVariant = selectedVariant !== null ? variants[selectedVariant] : null;
 
