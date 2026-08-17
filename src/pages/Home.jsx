@@ -96,15 +96,6 @@ export default function Home(nav) {
       </div>
 
       <section className="wrap">
-        <div className="sec-head"><h2>Nouveautés</h2><span className="see-all" onClick={() => nav.goShop('Nouveautés')}>Tout voir</span></div>
-        <div className="grid4">
-          {featured.length > 0
-            ? featured.map(p => <ProductCard key={p.id} p={p} {...nav} />)
-            : <p className="muted">Chargement…</p>}
-        </div>
-      </section>
-
-      <section className="wrap">
         <div className="sec-head">
           <h2>Nos rayons</h2>
           <span className="muted-tag">PARCOUREZ PAR CATÉGORIE</span>
@@ -146,6 +137,15 @@ export default function Home(nav) {
               </div>
             );
           })}
+        </div>
+      </section>
+
+      <section className="wrap">
+        <div className="sec-head"><h2>Nouveautés</h2><span className="see-all" onClick={() => nav.goShop('Nouveautés')}>Tout voir</span></div>
+        <div className="grid4">
+          {featured.length > 0
+            ? featured.map(p => <ProductCard key={p.id} p={p} {...nav} />)
+            : <p className="muted">Chargement…</p>}
         </div>
       </section>
 
