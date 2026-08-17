@@ -137,7 +137,8 @@ export default function Home(nav) {
                       type="file"
                       accept="image/*"
                       style={{ display: 'none' }}
-                      onChange={e => { handleCatUpload(cat, e.target.files); e.target.value = ''; }}
+                      onClick={e => e.stopPropagation()}
+                      onChange={e => { e.stopPropagation(); handleCatUpload(cat, e.target.files); e.target.value = ''; }}
                     />
                   )}
                 </div>
