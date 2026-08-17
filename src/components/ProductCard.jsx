@@ -6,6 +6,7 @@ export default function ProductCard({ p, openProduct, toggleWish, wish, addToCar
   const wished = wish.includes(p.id);
   const inStock = p.stock > 0;
   const [variants, setVariants] = useState([]);
+  const displayImg = p.img || (Array.isArray(p.gallery) && p.gallery.length > 0 ? p.gallery[0] : '');
 
   useEffect(() => {
     if (!p.id) return;
@@ -17,8 +18,8 @@ export default function ProductCard({ p, openProduct, toggleWish, wish, addToCar
   return (
     <div className="card" onClick={() => openProduct(p.id)}>
       <div className="card-img">
-        {p.img ? (
-          <img src={p.img} alt={p.name} loading="lazy" />
+        {displayImg ? (
+          <img src={displayImg} alt={p.name} loading="lazy" />
         ) : (
           <div className="card-noimg">
             <span>{(p.brand || '').charAt(0)}</span>
@@ -31,7 +32,7 @@ export default function ProductCard({ p, openProduct, toggleWish, wish, addToCar
         {p.stock === 0 && <span className="stock-badge">Épuisé</span>}
         {p.stock > 0 && p.stock <= 3 && <span className="stock-badge low">Bientôt épuisé</span>}
         {inStock && (
-          <button className="card-add-btn" onClick={e => { e.stopPropagation(); addToCart({ name: p.name, img: p.img, price: p.price, size: (p.sizes && p.sizes[0]) || '' }); }}>
+          <button className="card-add-btn" onClick={e => { e.stopPropagation(); addToCart({ name: p.name, img: displayImg, price: p.price, size: (p.sizes && p.sizes[0]) || '' }); }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
