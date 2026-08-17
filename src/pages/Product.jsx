@@ -25,7 +25,11 @@ export default function Product(nav) {
         setP(full);
         supabase.from('product_variants').select('*').eq('product_id', full.id).order('created_at', { ascending: true }).then(({ data, error }) => {
           if (!error && data) {
-            const mapped = data.map(v => ({ ...v, sizes: Array.isArray(v.sizes) ? v.sizes : [] }));
+            const mapped = data.map(v => ({
+              ...v,
+              sizes: Array.isArray(v.sizes) ? v.sizes : [],
+              photos: Array.isArray(v.photos) ? v.photos : (v.img ? [v.img] : []),
+            }));
             setVariants(mapped);
             if (mapped.length > 0) setSelectedVariant(0);
           }
@@ -41,10 +45,15 @@ export default function Product(nav) {
 
   const currentVariant = selectedVariant !== null ? variants[selectedVariant] : null;
 
+  const variantPhotos = currentVariant?.photos || [];
   const galleryImages = [];
-  if (p?.img) galleryImages.push(p.img);
-  if (p?.gallery && Array.isArray(p.gallery)) galleryImages.push(...p.gallery);
-  if (currentVariant?.img && !galleryImages.includes(currentVariant.img)) galleryImages.unshift(currentVariant.img);
+  if (currentVariant && variantPhotos.length > 0) {
+    galleryImages.push(...variantPhotos);
+  }
+  if (p?.img && !galleryImages.includes(p.img)) galleryImages.unshift(p.img);
+  if (p?.gallery && Array.isArray(p.gallery)) {
+    p.gallery.forEach(url => { if (!galleryImages.includes(url)) galleryImages.push(url); });
+  }
 
   const displayImg = galleryImages[activeImg] || galleryImages[0] || p?.img;
   const displaySizes = currentVariant?.sizes?.length > 0 ? currentVariant.sizes : (p?.sizes || []);
@@ -103,6 +112,19 @@ export default function Product(nav) {
               </div>
               {currentVariant?.color_name && (
                 <div className="selected-color-name">{currentVariant.color_name}</div>
+              )}
+              {currentVariant && variantPhotos.length > 1 && (
+                <div className="variant-photos-strip">
+                  {variantPhotos.map((url, pi) => (
+                    <button
+                      key={pi}
+                      className={'variant-photo-thumb' + (activeImg === pi ? ' on' : '')}
+                      onClick={() => setActiveImg(pi)}
+                    >
+                      <img src={url} alt={`Vue ${pi + 1}`} loading="lazy" />
+                    </button>
+                  ))}
+                </div>
               )}
             </>
           )}

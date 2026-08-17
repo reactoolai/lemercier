@@ -444,6 +444,14 @@ input { font-family: 'Jost', sans-serif; outline: none; }
 .photo-color-dot.on { border-color: var(--navy); box-shadow: 0 0 0 2px rgba(27,53,96,.2); }
 .photo-color-names { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
 .photo-color-tag { font-size: 11px; background: #E8E8E2; color: var(--ink); padding: 2px 6px; border-radius: 3px; }
+.color-photo-count { font-size: 12px; color: var(--muted); white-space: nowrap; }
+
+/* Variant photos strip on product page */
+.variant-photos-strip { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+.variant-photo-thumb { width: 48px; height: 60px; border-radius: 6px; overflow: hidden; cursor: pointer; border: 2px solid transparent; padding: 0; background: #fff; transition: border-color .15s; }
+.variant-photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.variant-photo-thumb.on { border-color: var(--navy); }
+.variant-photo-thumb:hover { border-color: var(--navy); }
 
 /* Standard sizes picker */
 .sizes-picker { display: flex; flex-wrap: wrap; gap: 8px; }

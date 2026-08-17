@@ -3,33 +3,6 @@ import { supabase } from '../lib/supabase.js';
 
 const STANDARD_SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'TU', '28', '30', '32', '34', '36', '38', '40', '42', '44', 'P', 'TG', 'TTG', '3TG'];
 
-const COLOR_PALETTE = [
-  { name: 'Noir', hex: '#000000' },
-  { name: 'Blanc', hex: '#FFFFFF' },
-  { name: 'Gris', hex: '#808080' },
-  { name: 'Gris foncé', hex: '#404040' },
-  { name: 'Gris clair', hex: '#C0C0C0' },
-  { name: 'Bleu marine', hex: '#1B2A4E' },
-  { name: 'Bleu', hex: '#2E5AAB' },
-  { name: 'Bleu ciel', hex: '#7EB8DA' },
-  { name: 'Rouge', hex: '#C0392B' },
-  { name: 'Bordeaux', hex: '#6B1A2C' },
-  { name: 'Vert', hex: '#27855A' },
-  { name: 'Vert foncé', hex: '#1A4D32' },
-  { name: 'Kaki', hex: '#8B7D3C' },
-  { name: 'Beige', hex: '#D8C8A8' },
-  { name: 'Camel', hex: '#B8865A' },
-  { name: 'Brun', hex: '#6B4A2A' },
-  { name: 'Marron', hex: '#4A2C1A' },
-  { name: 'Jaune', hex: '#E8B820' },
-  { name: 'Orange', hex: '#D67D2A' },
-  { name: 'Rose', hex: '#D4869A' },
-  { name: 'Violet', hex: '#6B4C8C' },
-  { name: 'Turquoise', hex: '#3DB5A8' },
-  { name: 'Crème', hex: '#F2EAD6' },
-  { name: 'Autre', hex: '#999999' },
-];
-
 async function uploadImage(file, prefix = 'product') {
   const ext = file.name.split('.').pop().toLowerCase();
   const fileName = `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
@@ -83,7 +56,7 @@ export default function ProductEditModal({ product, onSaved, onClose }) {
         ...v,
         color: v.color || '#000000',
         color_name: v.color_name || '',
-        img: v.img || '',
+        photos: Array.isArray(v.photos) ? v.photos : (v.img ? [v.img] : []),
         sizes: Array.isArray(v.sizes) ? v.sizes : [],
         stock: v.stock ?? 0,
         _dirty: false,
@@ -96,7 +69,7 @@ export default function ProductEditModal({ product, onSaved, onClose }) {
   const allPhotos = [form.img, ...form.gallery].filter(Boolean);
 
   const addColor = () => {
-    setColors(prev => [...prev, { _new: true, color: '#000000', color_name: '', img: '', sizes: [], stock: 0 }]);
+    setColors(prev => [...prev, { _new: true, color: '#000000', color_name: '', photos: [], sizes: [], stock: 0 }]);
   };
 
   const updateColor = (idx, field, value) => {
@@ -117,10 +90,11 @@ export default function ProductEditModal({ product, onSaved, onClose }) {
 
   const togglePhotoColor = (photoUrl, colorIdx) => {
     const c = colors[colorIdx];
-    if (c.img === photoUrl) {
-      updateColor(colorIdx, 'img', '');
+    const photos = Array.isArray(c.photos) ? c.photos : [];
+    if (photos.includes(photoUrl)) {
+      updateColor(colorIdx, 'photos', photos.filter(u => u !== photoUrl));
     } else {
-      updateColor(colorIdx, 'img', photoUrl);
+      updateColor(colorIdx, 'photos', [...photos, photoUrl]);
     }
   };
 
@@ -142,19 +116,22 @@ export default function ProductEditModal({ product, onSaved, onClose }) {
   };
 
   const removePhoto = (idx) => {
+    let removed;
     if (idx === 0 && form.img) {
-      const first = form.img;
+      removed = form.img;
       const rest = form.gallery;
       const newMain = rest.length > 0 ? rest[0] : '';
       const newGallery = rest.slice(1);
       setForm(f => ({ ...f, img: newMain, gallery: newGallery }));
-      setColors(prev => prev.map(c => c.img === first ? { ...c, img: '', _dirty: true } : c));
     } else {
       const galleryIdx = form.img ? idx - 1 : idx;
-      const removed = form.gallery[galleryIdx];
+      removed = form.gallery[galleryIdx];
       setForm(f => ({ ...f, gallery: f.gallery.filter((_, i) => i !== galleryIdx) }));
-      setColors(prev => prev.map(c => c.img === removed ? { ...c, img: '', _dirty: true } : c));
     }
+    setColors(prev => prev.map(c => {
+      const photos = Array.isArray(c.photos) ? c.photos.filter(u => u !== removed) : [];
+      return { ...c, photos, _dirty: true };
+    }));
   };
 
   const setMainPhoto = (idx) => {
@@ -181,7 +158,6 @@ export default function ProductEditModal({ product, onSaved, onClose }) {
       const newGallery = form.gallery.filter((_, i) => i !== galleryIdx);
       setForm(f => ({ ...f, img: newMain, gallery: [oldMain, ...newGallery] }));
     } else {
-      const startIdx = form.img ? 0 : 1;
       const arr = [...form.gallery];
       const gi = form.img ? idx - 1 : idx;
       const ni = form.img ? newIdx - 1 : newIdx;
@@ -220,11 +196,13 @@ export default function ProductEditModal({ product, onSaved, onClose }) {
 
     const productId = result?.id || form.id;
     for (const c of colors) {
+      const photos = Array.isArray(c.photos) ? c.photos : [];
       const cPayload = {
         product_id: productId,
         color: c.color || '',
         color_name: c.color_name || '',
-        img: c.img || '',
+        img: photos[0] || '',
+        photos,
         sizes: Array.isArray(c.sizes) ? c.sizes : [],
         stock: Number(c.stock) || 0,
       };
@@ -296,7 +274,7 @@ export default function ProductEditModal({ product, onSaved, onClose }) {
             <textarea value={form.desc} onChange={e => setForm({ ...form, desc: e.target.value })} rows={3} />
           </div>
 
-          {/* COULEURS - simple: pixel + nom */}
+          {/* COULEURS - juste pixel + nom */}
           <div className="edit-section">
             <div className="edit-section-head">
               <h3>Couleurs</h3>
@@ -308,49 +286,35 @@ export default function ProductEditModal({ product, onSaved, onClose }) {
               <p className="muted">Aucune couleur. Cliquez sur « + Couleur » pour en ajouter.</p>
             ) : (
               <div className="colors-simple-list">
-                {colors.map((c, idx) => (
-                  <div key={c.id || idx} className="color-simple-row">
-                    <div className="color-simple-left">
-                      <input
-                        type="color"
-                        value={c.color || '#000000'}
-                        onChange={e => updateColor(idx, 'color', e.target.value)}
-                        className="color-pixel-input"
-                      />
-                      <input
-                        type="text"
-                        value={c.color_name || ''}
-                        onChange={e => updateColor(idx, 'color_name', e.target.value)}
-                        placeholder="Nom (ex: Noir, Bleu marine…)"
-                        className="color-text-input"
-                      />
+                {colors.map((c, idx) => {
+                  const photoCount = (c.photos || []).length;
+                  return (
+                    <div key={c.id || idx} className="color-simple-row">
+                      <div className="color-simple-left">
+                        <input
+                          type="color"
+                          value={c.color || '#000000'}
+                          onChange={e => updateColor(idx, 'color', e.target.value)}
+                          className="color-pixel-input"
+                        />
+                        <input
+                          type="text"
+                          value={c.color_name || ''}
+                          onChange={e => updateColor(idx, 'color_name', e.target.value)}
+                          placeholder="Nom (ex: Noir, Bleu marine…)"
+                          className="color-text-input"
+                        />
+                        {photoCount > 0 && <span className="color-photo-count">{photoCount} photo{photoCount > 1 ? 's' : ''}</span>}
+                      </div>
+                      <button type="button" className="color-simple-remove" onClick={() => removeColor(idx)}>✕</button>
                     </div>
-                    <div className="color-simple-assign">
-                      {allPhotos.length > 0 && (
-                        <div className="color-photo-chips">
-                          {allPhotos.map((url, pi) => (
-                            <button
-                              key={pi}
-                              type="button"
-                              className={'photo-assign-chip' + (c.img === url ? ' on' : '')}
-                              style={{ borderColor: c.img === url ? c.color : '#D5D5CE' }}
-                              onClick={() => togglePhotoColor(url, idx)}
-                              title={c.img === url ? 'Retirer cette photo' : 'Assigner cette photo'}
-                            >
-                              <img src={url} alt="" />
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                    <button type="button" className="color-simple-remove" onClick={() => removeColor(idx)}>✕</button>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
 
-          {/* PHOTOS - toutes les photos, avec assignation de couleurs */}
+          {/* PHOTOS - toutes les photos, avec assignation de couleurs (multi) */}
           <div className="edit-section">
             <div className="edit-section-head">
               <h3>Photos</h3>
@@ -372,7 +336,7 @@ export default function ProductEditModal({ product, onSaved, onClose }) {
             ) : (
               <div className="photos-grid">
                 {allPhotos.map((url, idx) => {
-                  const assignedColors = colors.filter(c => c.img === url);
+                  const assignedColors = colors.filter(c => (c.photos || []).includes(url));
                   return (
                     <div key={idx} className="photo-card">
                       <img src={url} alt={`Photo ${idx + 1}`} className="photo-card-img" />
@@ -385,18 +349,21 @@ export default function ProductEditModal({ product, onSaved, onClose }) {
                       </div>
                       {colors.length > 0 && (
                         <div className="photo-color-assign">
-                          <div className="photo-color-label">Couleur:</div>
+                          <div className="photo-color-label">Couleurs:</div>
                           <div className="photo-color-dots">
-                            {colors.map((c, ci) => (
-                              <button
-                                key={ci}
-                                type="button"
-                                className={'photo-color-dot' + (c.img === url ? ' on' : '')}
-                                style={{ background: c.color || '#000' }}
-                                title={c.color_name || c.color || ''}
-                                onClick={() => togglePhotoColor(url, ci)}
-                              />
-                            ))}
+                            {colors.map((c, ci) => {
+                              const isOn = (c.photos || []).includes(url);
+                              return (
+                                <button
+                                  key={ci}
+                                  type="button"
+                                  className={'photo-color-dot' + (isOn ? ' on' : '')}
+                                  style={{ background: c.color || '#000' }}
+                                  title={c.color_name || c.color || ''}
+                                  onClick={() => togglePhotoColor(url, ci)}
+                                />
+                              );
+                            })}
                           </div>
                           {assignedColors.length > 0 && (
                             <div className="photo-color-names">
