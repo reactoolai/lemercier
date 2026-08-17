@@ -125,10 +125,16 @@ input { font-family: 'Jost', sans-serif; outline: none; }
 .crumbs { font-size: 13.5px; color: var(--muted); margin-bottom: 26px; }
 .crumbs span { cursor: pointer; color: var(--navy); }
 .prod-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
-.prod-img { background: #F0F0EB; }
-.prod-img img { width: 100%; display: block; object-fit: cover; aspect-ratio: 4/5; }
+.prod-img-col { display: flex; flex-direction: column; gap: 12px; }
+.prod-img-zoom-wrap { position: relative; background: #F0F0EB; overflow: hidden; cursor: zoom-in; aspect-ratio: 4/5; }
+.prod-img-zoom-wrap.zooming { cursor: zoom-out; }
+.prod-img-main { width: 100%; height: 100%; display: block; object-fit: cover; transition: transform .15s ease-out; }
+.prod-img-zoom-wrap.zooming .prod-img-main { transform: scale(2.2); }
+.prod-zoom-hint { position: absolute; bottom: 12px; right: 12px; background: rgba(255,255,255,.85); color: var(--ink); font-size: 11px; padding: 4px 10px; border-radius: 4px; pointer-events: none; opacity: 0; transition: opacity .2s; }
+.prod-img-zoom-wrap.zooming .prod-zoom-hint { opacity: 1; }
 .prod-info { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 120px; }
 .prod-info h1 { font-size: 32px; margin: 0; }
+.prod-ref { font-size: 13px; color: var(--muted); font-family: monospace; letter-spacing: .03em; }
 .prod-price { font-size: 22px; color: var(--navy); font-weight: 500; }
 .size-label { font-size: 13px; letter-spacing: .14em; color: var(--muted); }
 .prod-note { font-size: 13.5px; color: var(--muted); line-height: 1.7; border-top: 1px solid var(--line); padding-top: 16px; }
@@ -400,8 +406,8 @@ input { font-family: 'Jost', sans-serif; outline: none; }
 .card-color-more { font-size: 11px; color: var(--muted); margin-left: 2px; }
 
 /* Product page gallery thumbnails */
-.prod-thumbs { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
-.prod-thumb { width: 56px; height: 70px; border-radius: 6px; overflow: hidden; cursor: pointer; border: 2px solid transparent; padding: 0; background: #fff; transition: border-color .15s; }
+.prod-thumbs { display: flex; gap: 8px; flex-wrap: wrap; }
+.prod-thumb { width: 64px; height: 80px; border-radius: 6px; overflow: hidden; cursor: pointer; border: 2px solid transparent; padding: 0; background: #fff; transition: border-color .15s; flex-shrink: 0; }
 .prod-thumb img { width: 100%; height: 100%; object-fit: cover; }
 .prod-thumb.on { border-color: var(--navy); }
 .prod-thumb:hover { border-color: var(--navy); }

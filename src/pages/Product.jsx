@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { fmt } from '../data/products.js';
 import { supabase, fetchProductById } from '../lib/supabase.js';
 import ProductCard from '../components/ProductCard.jsx';
@@ -11,6 +11,9 @@ export default function Product(nav) {
   const [size, setSize] = useState(null);
   const [similar, setSimilar] = useState([]);
   const [activeImg, setActiveImg] = useState(0);
+  const [zoom, setZoom] = useState(false);
+  const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 });
+  const imgWrapRef = useRef(null);
 
   useEffect(() => {
     setSize(null);
@@ -18,6 +21,7 @@ export default function Product(nav) {
     setSelectedVariant(null);
     setVariants([]);
     setActiveImg(0);
+    setZoom(false);
     if (!pid) return;
     setP(null);
     fetchProductById(pid).then(full => {
@@ -59,14 +63,40 @@ export default function Product(nav) {
   const displaySizes = currentVariant?.sizes?.length > 0 ? currentVariant.sizes : (p?.sizes || []);
   const displayStock = currentVariant ? currentVariant.stock : p?.stock;
 
+  const handleMouseMove = (e) => {
+    if (!imgWrapRef.current) return;
+    const rect = imgWrapRef.current.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    setZoomPos({ x: Math.max(0, Math.min(100, x)), y: Math.max(0, Math.min(100, y)) });
+  };
+
   if (!p) return <main className="wrap page"><p className="muted">Produit introuvable.</p></main>;
 
   return (
     <main className="wrap page">
       <div className="crumbs"><span onClick={nav.goHome}>Accueil</span> / <span onClick={() => nav.goShop()}>Boutique</span> / {p.name}</div>
       <div className="prod-grid">
-        <div className="prod-img">
-          {displayImg ? <img src={displayImg} alt={p.name} /> : <div className="no-img">Pas d'image</div>}
+        <div className="prod-img-col">
+          <div
+            className={'prod-img-zoom-wrap' + (zoom ? ' zooming' : '')}
+            ref={imgWrapRef}
+            onMouseEnter={() => displayImg && setZoom(true)}
+            onMouseLeave={() => setZoom(false)}
+            onMouseMove={handleMouseMove}
+          >
+            {displayImg ? (
+              <img
+                src={displayImg}
+                alt={p.name}
+                className="prod-img-main"
+                style={zoom ? { transformOrigin: `${zoomPos.x}% ${zoomPos.y}%` } : undefined}
+              />
+            ) : (
+              <div className="no-img">Pas d'image</div>
+            )}
+            {zoom && displayImg && <div className="prod-zoom-hint">Survolez pour zoomer</div>}
+          </div>
           {galleryImages.length > 1 && (
             <div className="prod-thumbs">
               {galleryImages.map((url, i) => (
@@ -87,6 +117,7 @@ export default function Product(nav) {
           {isAdmin && (
             <button className="admin-edit-inline" onClick={() => setEditingProduct(p)}>✎ Modifier ce produit</button>
           )}
+          <div className="prod-ref">Réf. {p.sku || p.id}</div>
           <div className="prod-price">{fmt(p.price)}</div>
           {displayStock !== undefined && displayStock !== null && (
             <div className={displayStock > 0 ? 'stock-ok' : 'stock-out'}>
@@ -112,19 +143,6 @@ export default function Product(nav) {
               </div>
               {currentVariant?.color_name && (
                 <div className="selected-color-name">{currentVariant.color_name}</div>
-              )}
-              {currentVariant && variantPhotos.length > 1 && (
-                <div className="variant-photos-strip">
-                  {variantPhotos.map((url, pi) => (
-                    <button
-                      key={pi}
-                      className={'variant-photo-thumb' + (activeImg === pi ? ' on' : '')}
-                      onClick={() => setActiveImg(pi)}
-                    >
-                      <img src={url} alt={`Vue ${pi + 1}`} loading="lazy" />
-                    </button>
-                  ))}
-                </div>
               )}
             </>
           )}
