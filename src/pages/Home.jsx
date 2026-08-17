@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { HERO_IMG, LOOKBOOK } from '../data/products.js';
+import { HERO_IMG } from '../data/products.js';
 import { fetchProducts, supabase } from '../lib/supabase.js';
 import ProductCard from '../components/ProductCard.jsx';
 
@@ -34,9 +34,12 @@ export default function Home(nav) {
   const { isAdmin, productRefreshKey } = nav;
   const [featured, setFeatured] = useState([]);
   const [catImages, setCatImages] = useState({});
+  const [banners, setBanners] = useState([]);
   const [uploadingCat, setUploadingCat] = useState(null);
+  const [uploadingBanner, setUploadingBanner] = useState(null);
   const [uploadErr, setUploadErr] = useState('');
   const fileRefs = useRef({});
+  const bannerRefs = useRef({});
 
   useEffect(() => {
     Promise.all([
@@ -62,6 +65,9 @@ export default function Home(nav) {
         setCatImages(map);
       }
     });
+    supabase.from('collection_banners').select('*').order('sort_order', { ascending: true }).then(({ data }) => {
+      if (data) setBanners(data);
+    });
   }, []);
 
   const handleCatUpload = async (category, files) => {
@@ -75,6 +81,27 @@ export default function Home(nav) {
       setUploadErr(e.message || 'Erreur upload');
     }
     setUploadingCat(null);
+  };
+
+  const handleBannerUpload = async (bannerId, files) => {
+    if (!files || files.length === 0) return;
+    setUploadingBanner(bannerId);
+    setUploadErr('');
+    try {
+      const file = files[0];
+      const ext = file.name.split('.').pop().toLowerCase();
+      const fileName = `banner-${bannerId}-${Date.now()}.${ext}`;
+      const { error: upErr } = await supabase.storage.from('product-images').upload(fileName, file, { cacheControl: '3600', upsert: false });
+      if (upErr) throw upErr;
+      const { data: urlData } = supabase.storage.from('product-images').getPublicUrl(fileName);
+      const url = urlData.publicUrl;
+      const { error: dbErr } = await supabase.from('collection_banners').update({ img: url }).eq('id', bannerId);
+      if (dbErr) throw dbErr;
+      setBanners(prev => prev.map(b => b.id === bannerId ? { ...b, img: url } : b));
+    } catch (e) {
+      setUploadErr(e.message || 'Erreur upload');
+    }
+    setUploadingBanner(null);
   };
 
   return (
@@ -177,8 +204,44 @@ export default function Home(nav) {
       </section>
 
       <section className="wrap">
-        <div className="sec-head"><h2>Lookbook</h2><span className="muted-tag">LA COLLECTION PORTÉE</span></div>
-        <div className="lookbook">{LOOKBOOK.map((src, i) => <img key={i} src={src} alt={'Lookbook ' + (i + 1)} className={i % 2 ? 'offset' : ''} />)}</div>
+        <div className="sec-head"><h2>Collections</h2><span className="muted-tag">NOS SÉLECTIONS</span></div>
+        <div className="collection-banners">
+          {banners.map(b => (
+            <div key={b.id} className="collection-banner" onClick={() => nav.goCategory(b.category)}>
+              <div className="collection-banner-img">
+                {b.img ? (
+                  <img src={b.img} alt={b.title} loading="lazy" />
+                ) : (
+                  <div className="collection-banner-placeholder">{b.title}</div>
+                )}
+                {isAdmin && (
+                  <button
+                    className="cat-tile-edit"
+                    onClick={(e) => { e.stopPropagation(); bannerRefs.current[b.id]?.click(); }}
+                    disabled={uploadingBanner === b.id}
+                    title="Changer la photo"
+                  >
+                    {uploadingBanner === b.id ? '…' : '📷'}
+                  </button>
+                )}
+                {isAdmin && (
+                  <input
+                    ref={el => { bannerRefs.current[b.id] = el; }}
+                    type="file"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    onClick={e => e.stopPropagation()}
+                    onChange={e => { e.stopPropagation(); handleBannerUpload(b.id, e.target.files); e.target.value = ''; }}
+                  />
+                )}
+              </div>
+              <div className="collection-banner-overlay">
+                <div className="collection-banner-title">{b.title}</div>
+                <button className="btn-outline collection-banner-btn">VOIR LA COLLECTION</button>
+              </div>
+            </div>
+          ))}
+        </div>
       </section>
 
       <section className="about-band">
