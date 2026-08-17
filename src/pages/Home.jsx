@@ -28,7 +28,7 @@ async function uploadCategoryImage(file, category) {
 }
 
 export default function Home(nav) {
-  const { isAdmin } = nav;
+  const { isAdmin, productRefreshKey } = nav;
   const [featured, setFeatured] = useState([]);
   const [catImages, setCatImages] = useState({});
   const [uploadingCat, setUploadingCat] = useState(null);
@@ -37,6 +37,9 @@ export default function Home(nav) {
 
   useEffect(() => {
     fetchProducts({ page: 0, perPage: 8, inStockOnly: true }).then(({ products }) => setFeatured(products)).catch(() => {});
+  }, [productRefreshKey]);
+
+  useEffect(() => {
     supabase.from('category_images').select('category,img').then(({ data }) => {
       if (data) {
         const map = {};
