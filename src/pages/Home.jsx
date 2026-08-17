@@ -3,6 +3,8 @@ import { HERO_IMG, LOOKBOOK } from '../data/products.js';
 import { fetchProducts, supabase } from '../lib/supabase.js';
 import ProductCard from '../components/ProductCard.jsx';
 
+const FEATURED_IDS = ['09S15PSP', '05S7BHTP'];
+
 const CATEGORY_TILES = [
   'Chemises',
   'Polos',
@@ -36,7 +38,19 @@ export default function Home(nav) {
   const fileRefs = useRef({});
 
   useEffect(() => {
-    fetchProducts({ page: 0, perPage: 8, inStockOnly: true }).then(({ products }) => setFeatured(products)).catch(() => {});
+    Promise.all([
+      fetchProducts({ page: 0, perPage: 8, inStockOnly: true }),
+      ...FEATURED_IDS.map(id => supabase.from('products').select('*').eq('id', id).maybeSingle().then(({ data }) => data)),
+    ]).then(([res, ...featuredRows]) => {
+      const featured = featuredRows.filter(Boolean).map(p => ({
+        ...p,
+        price: Number(p.price),
+        sizes: Array.isArray(p.sizes) ? p.sizes : [],
+        gallery: Array.isArray(p.gallery) ? p.gallery : [],
+      }));
+      const rest = (res.products || []).filter(p => !FEATURED_IDS.includes(p.id));
+      setFeatured([...featured, ...rest].slice(0, 8));
+    }).catch(() => {});
   }, [productRefreshKey]);
 
   useEffect(() => {
