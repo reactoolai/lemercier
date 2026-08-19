@@ -69,11 +69,28 @@ export default function ProductEditModal({ product, onSaved, onClose }) {
   const allPhotos = [form.img, ...form.gallery].filter(Boolean);
 
   const addColor = () => {
-    setColors(prev => [...prev, { _new: true, color: '#000000', color_name: '', photos: [], sizes: [], stock: 0 }]);
+    const defaultSizes = Array.isArray(form.sizes) && form.sizes.length > 0 ? [...form.sizes] : [];
+    setColors(prev => [...prev, { _new: true, color: '#000000', color_name: '', photos: [], sizes: defaultSizes, stock: 0 }]);
   };
 
   const updateColor = (idx, field, value) => {
     setColors(prev => prev.map((c, i) => i === idx ? { ...c, [field]: value, _dirty: true } : c));
+  };
+
+  const toggleColorSize = (colorIdx, size) => {
+    setColors(prev => prev.map((c, i) => {
+      if (i !== colorIdx) return c;
+      const sizes = Array.isArray(c.sizes) ? c.sizes : [];
+      const has = sizes.includes(size);
+      return { ...c, sizes: has ? sizes.filter(s => s !== size) : [...sizes, size], _dirty: true };
+    }));
+  };
+
+  const setAllColorSizes = (colorIdx, on) => {
+    setColors(prev => prev.map((c, i) => {
+      if (i !== colorIdx) return c;
+      return { ...c, sizes: on ? [...STANDARD_SIZES.filter(s => form.sizes.includes(s))] : [], _dirty: true };
+    }));
   };
 
   const removeColor = async (idx) => {
@@ -288,25 +305,51 @@ export default function ProductEditModal({ product, onSaved, onClose }) {
               <div className="colors-simple-list">
                 {colors.map((c, idx) => {
                   const photoCount = (c.photos || []).length;
+                  const colorSizes = Array.isArray(c.sizes) ? c.sizes : [];
+                  const availableSizes = (form.sizes || []).filter(s => STANDARD_SIZES.includes(s));
                   return (
                     <div key={c.id || idx} className="color-simple-row">
-                      <div className="color-simple-left">
-                        <input
-                          type="color"
-                          value={c.color || '#000000'}
-                          onChange={e => updateColor(idx, 'color', e.target.value)}
-                          className="color-pixel-input"
-                        />
-                        <input
-                          type="text"
-                          value={c.color_name || ''}
-                          onChange={e => updateColor(idx, 'color_name', e.target.value)}
-                          placeholder="Nom (ex: Noir, Bleu marine…)"
-                          className="color-text-input"
-                        />
-                        {photoCount > 0 && <span className="color-photo-count">{photoCount} photo{photoCount > 1 ? 's' : ''}</span>}
+                      <div className="color-simple-head">
+                        <div className="color-simple-left">
+                          <input
+                            type="color"
+                            value={c.color || '#000000'}
+                            onChange={e => updateColor(idx, 'color', e.target.value)}
+                            className="color-pixel-input"
+                          />
+                          <input
+                            type="text"
+                            value={c.color_name || ''}
+                            onChange={e => updateColor(idx, 'color_name', e.target.value)}
+                            placeholder="Nom (ex: Noir, Bleu marine…)"
+                            className="color-text-input"
+                          />
+                          {photoCount > 0 && <span className="color-photo-count">{photoCount} photo{photoCount > 1 ? 's' : ''}</span>}
+                        </div>
+                        <button type="button" className="color-simple-remove" onClick={() => removeColor(idx)}>✕</button>
                       </div>
-                      <button type="button" className="color-simple-remove" onClick={() => removeColor(idx)}>✕</button>
+                      {availableSizes.length > 0 && (
+                        <div className="color-size-matrix">
+                          <div className="color-size-matrix-label">Tailles disponibles pour cette couleur:</div>
+                          <div className="color-size-toggles">
+                            {availableSizes.map(s => (
+                              <button
+                                key={s}
+                                type="button"
+                                className={'size-toggle' + (colorSizes.includes(s) ? ' on' : '')}
+                                onClick={() => toggleColorSize(idx, s)}
+                              >{s}</button>
+                            ))}
+                          </div>
+                          <div className="color-size-quick">
+                            <button type="button" className="size-quick-btn" onClick={() => setAllColorSizes(idx, true)}>Tout cocher</button>
+                            <button type="button" className="size-quick-btn" onClick={() => setAllColorSizes(idx, false)}>Tout décocher</button>
+                          </div>
+                        </div>
+                      )}
+                      {availableSizes.length === 0 && (
+                        <div className="color-size-hint">Définissez d'abord les tailles du produit ci-dessus.</div>
+                      )}
                     </div>
                   );
                 })}

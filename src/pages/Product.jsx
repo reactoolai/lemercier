@@ -67,7 +67,7 @@ export default function Product(nav) {
 
   const displayImg = galleryImages[activeImg] || galleryImages[0] || p?.img;
   const displaySizes = currentVariant?.sizes?.length > 0 ? currentVariant.sizes : (p?.sizes || []);
-  const displayStock = currentVariant ? currentVariant.stock : p?.stock;
+  const displayStock = currentVariant ? (currentVariant.stock ?? 0) : p?.stock;
 
   const handleMouseMove = (e) => {
     if (!imgWrapRef.current) return;
