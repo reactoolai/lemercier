@@ -57,7 +57,7 @@ export default function ProductEditModal({ product, onSaved, onClose }) {
         color: v.color || '#000000',
         color_name: v.color_name || '',
         photos: Array.isArray(v.photos) ? v.photos : (v.img ? [v.img] : []),
-        sizes: Array.isArray(v.sizes) ? v.sizes : [],
+        sizes: (Array.isArray(v.sizes) && v.sizes.length > 0) ? v.sizes : (Array.isArray(product.sizes) ? [...product.sizes] : []),
         stock: v.stock ?? 0,
         _dirty: false,
         _new: false,

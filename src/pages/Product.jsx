@@ -33,7 +33,7 @@ export default function Product(nav) {
           if (!error && data) {
             const mapped = data.map(v => ({
               ...v,
-              sizes: Array.isArray(v.sizes) ? v.sizes : [],
+              sizes: (Array.isArray(v.sizes) && v.sizes.length > 0) ? v.sizes : (Array.isArray(full.sizes) ? [...full.sizes] : []),
               photos: Array.isArray(v.photos) ? v.photos : (v.img ? [v.img] : []),
             }));
             setVariants(mapped);
