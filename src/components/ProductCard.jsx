@@ -10,7 +10,7 @@ export default function ProductCard({ p, openProduct, toggleWish, wish, addToCar
 
   useEffect(() => {
     if (!p.id) return;
-    supabase.from('product_variants').select('color,color_name,img').eq('product_id', p.id).order('created_at', { ascending: true }).then(({ data }) => {
+    supabase.from('product_variants').select('color,color_name,img,sizes').eq('product_id', p.id).order('created_at', { ascending: true }).then(({ data }) => {
       if (data && data.length > 0) setVariants(data);
     });
   }, [p.id]);
@@ -45,16 +45,28 @@ export default function ProductCard({ p, openProduct, toggleWish, wish, addToCar
       <div className="card-name">{p.name}</div>
       <div className="card-price">{fmt(p.price)}</div>
       {variants.length > 0 && (
-        <div className="card-colors">
-          {variants.slice(0, 6).map((v, i) => (
-            <span
-              key={i}
-              className="card-color-dot"
-              style={{ background: v.color || '#000' }}
-              title={v.color_name || v.color || ''}
-            />
-          ))}
-          {variants.length > 6 && <span className="card-color-more">+{variants.length - 6}</span>}
+        <div className="card-variants-info">
+          <div className="card-colors">
+            {variants.slice(0, 6).map((v, i) => (
+              <span
+                key={i}
+                className="card-color-dot"
+                style={{ background: v.color || '#000' }}
+                title={v.color_name || v.color || ''}
+              />
+            ))}
+            {variants.length > 6 && <span className="card-color-more">+{variants.length - 6}</span>}
+          </div>
+          {(() => {
+            const allSizes = [...new Set(variants.flatMap(v => Array.isArray(v.sizes) ? v.sizes : []))];
+            if (allSizes.length === 0) return null;
+            return (
+              <div className="card-sizes-mini">
+                {allSizes.slice(0, 8).map(s => <span key={s} className="card-size-mini">{s}</span>)}
+                {allSizes.length > 8 && <span className="card-size-more">+{allSizes.length - 8}</span>}
+              </div>
+            );
+          })()}
         </div>
       )}
     </div>

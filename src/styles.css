@@ -477,6 +477,10 @@ input { font-family: 'Jost', sans-serif; outline: none; }
 .card-colors { display: flex; align-items: center; gap: 4px; margin-top: 6px; }
 .card-color-dot { width: 12px; height: 12px; border-radius: 50%; border: 1px solid #D5D5CE; display: inline-block; flex-shrink: 0; }
 .card-color-more { font-size: 11px; color: var(--muted); margin-left: 2px; }
+.card-variants-info { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+.card-sizes-mini { display: flex; flex-wrap: wrap; gap: 3px; }
+.card-size-mini { font-size: 10px; color: var(--muted); background: #F0F0EB; padding: 1px 5px; border-radius: 3px; letter-spacing: .02em; }
+.card-size-more { font-size: 10px; color: var(--muted); }
 
 /* Product page gallery thumbnails */
 .prod-thumbs { display: flex; gap: 8px; flex-wrap: wrap; }
