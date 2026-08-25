@@ -1,4 +1,4 @@
-export default function Footer({ goShop, goAbout }) {
+export default function Footer({ goShop, goAbout, goContact }) {
   return (
     <footer className="ftr">
       <div className="ftr-top">
@@ -40,7 +40,7 @@ export default function Footer({ goShop, goAbout }) {
           <div className="ftr-col">
             <div className="ftr-col-title">Nous joindre</div>
             <ul className="ftr-col-links ftr-contact">
-              <li className="ftr-addr">630 Rue Sacré-Coeur O, Alma, QC</li>
+              <li className="ftr-addr"><span onClick={goContact} style={{ cursor: 'pointer' }}>630 Rue Sacré-Coeur O, Alma, QC</span></li>
               <li><a href="tel:+14186623240">(418) 662-3240</a></li>
               <li className="ftr-hours">
                 <span className="ftr-hours-day">Lun–Mer</span> 9h30–17h30<br />

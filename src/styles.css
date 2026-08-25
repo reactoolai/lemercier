@@ -752,4 +752,31 @@ input { font-family: 'Jost', sans-serif; outline: none; }
   .hdr-search { display: none; }
   .hdr-search-mobile { display: flex; }
 }
+
+/* Product share buttons */
+.product-share { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line); }
+.product-share-label { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+.product-share-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+.share-btn { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; border: 1px solid #D5D5CE; background: #fff; color: var(--navy); font-size: 15px; text-decoration: none; cursor: pointer; transition: border-color .15s, background .15s; }
+.share-btn:hover { border-color: var(--navy); background: var(--cream); }
+.share-copy { font-size: 16px; }
+
+/* Contact page */
+.contact-page { padding-top: 32px; }
+.contact-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 28px; align-items: start; }
+.contact-info { display: flex; flex-direction: column; gap: 20px; }
+.contact-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 20px 24px; }
+.contact-card-title { font-family: 'Marcellus', serif; font-size: 17px; color: var(--navy); margin: 0 0 8px; }
+.contact-card-body { font-size: 14px; color: #5A6070; line-height: 1.6; }
+.contact-card-body a { color: var(--navy); text-decoration: none; }
+.contact-card-hours { font-size: 14px; color: #5A6070; line-height: 1.8; }
+.contact-hours-day { display: inline-block; min-width: 70px; font-weight: 500; color: var(--ink); }
+.contact-socials { display: flex; gap: 16px; }
+.contact-socials a { color: var(--navy); text-decoration: none; font-size: 14px; }
+.contact-socials a:hover { text-decoration: underline; }
+.contact-map { border-radius: 12px; overflow: hidden; }
+
+@media (max-width: 768px) {
+  .contact-layout { grid-template-columns: 1fr; }
+}
 }

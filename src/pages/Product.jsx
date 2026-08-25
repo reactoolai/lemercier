@@ -18,6 +18,7 @@ export default function Product(nav) {
   const [activeImg, setActiveImg] = useState(0);
   const [added, setAdded] = useState(false);
   const [copiedSku, setCopiedSku] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -205,6 +206,38 @@ export default function Product(nav) {
               className={'btn-outline wish-toggle' + (wished ? ' on' : '')}
               onClick={() => toggleWish(full.id)}
             >{wished ? '♥ Dans la liste' : '♡ Ajouter aux souhaits'}</button>
+          </div>
+
+          <div className="product-share">
+            <div className="product-share-label">Partager</div>
+            <div className="product-share-buttons">
+              {(() => {
+                const slug = `${full.id}-${(full.name || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60)}`;
+                const url = `https://lemercieralma.com/produit/${slug}`;
+                const shareText = `${full.name} — ${full.brand || ''} | Le Mercier Alma`;
+                return [
+                  { name: 'Facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, icon: 'f' },
+                  { name: 'Messenger', href: `https://www.facebook.com/dialog/send?app_id=&link=${encodeURIComponent(url)}&redirect_uri=${encodeURIComponent(url)}`, icon: 'm' },
+                  { name: 'X', href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(url)}`, icon: '𝕏' },
+                  { name: 'Pinterest', href: `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(url)}&description=${encodeURIComponent(shareText)}${full.img ? `&media=${encodeURIComponent(full.img.startsWith('http') ? full.img : 'https://lemercieralma.com' + full.img)}` : ''}`, icon: 'P' },
+                  { name: 'WhatsApp', href: `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + url)}`, icon: 'W' },
+                  { name: 'Courriel', href: `mailto:?subject=${encodeURIComponent(shareText)}&body=${encodeURIComponent(url)}`, icon: '@' },
+                ].map(s => (
+                  <a key={s.name} href={s.href} target="_blank" rel="noopener noreferrer" className="share-btn" aria-label={`Partager sur ${s.name}`} title={s.name}>{s.icon}</a>
+                ));
+              })()}
+              <button
+                className="share-btn share-copy"
+                onClick={() => {
+                  const slug = `${full.id}-${(full.name || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60)}`;
+                  navigator.clipboard?.writeText(`https://lemercieralma.com/produit/${slug}`);
+                  setCopiedLink(true);
+                  setTimeout(() => setCopiedLink(false), 2000);
+                }}
+                aria-label="Copier le lien"
+                title="Copier le lien"
+              >{copiedLink ? '✓' : '🔗'}</button>
+            </div>
           </div>
 
           <div className="product-features">

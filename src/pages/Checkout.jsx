@@ -24,7 +24,7 @@ export default function Checkout({ nav, orderNumber }) {
   const cardInstanceRef = useRef(null);
 
   useEffect(() => {
-    setPageSEO('Commande', 'Finalisez votre commande chez Le Mercier Alma. Paiement sécurisé par Square.');
+    setPageSEO('Commande', 'Finalisez votre commande chez Le Mercier Alma. Paiement sécurisé par Square.', '/commande');
   }, []);
 
   // Load Square SDK

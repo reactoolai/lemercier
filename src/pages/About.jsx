@@ -3,7 +3,7 @@ import { setPageSEO } from '../lib/seo.js';
 
 export default function About({ goShop }) {
   useEffect(() => {
-    setPageSEO('À propos', 'Le Mercier Alma — boutique de vêtements pour homme à Alma, Québec. Née à Saint-Georges de Beauce, la boutique offre marques sélectionnées, service personnalisé et ajustements sur mesure.');
+    setPageSEO('À propos', 'Le Mercier Alma — boutique de vêtements pour homme à Alma, Québec. Née à Saint-Georges de Beauce, la boutique offre marques sélectionnées, service personnalisé et ajustements sur mesure.', '/a-propos');
   }, []);
 
   return (
