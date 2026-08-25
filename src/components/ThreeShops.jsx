@@ -1,46 +1,30 @@
-const SHOPS = [
-  {
-    name: 'Le Choix de Sophie',
-    tag: 'Mode féminine',
-    desc: 'Mode féminine à Alma — des pièces choisies une à une, du chic décontracté au glamour urbain.',
-    link: 'https://lechoixdesophie.com',
-    logo: '/lechoixdesophie-logo.jpg',
-  },
-  {
-    name: 'Attitude Sports',
-    tag: 'Vêtements de sport',
-    desc: 'Vêtements et chaussures de sport pour toute la famille — performance, confort et style au quotidien.',
-    link: 'https://attitudesport.ca',
-    logo: '/attitudesport-logo.png',
-  },
+const BOUTIQUES = [
+  { name: 'Le Mercier Alma', desc: 'Mercerie pour homme à Alma — chemises, costumes, polos et accessoires de marques sélectionnées, avec ajustements sur mesure en boutique.', link: 'https://lemercieralma.com', logo: '/assets/lemercier-logo.jpg' },
+  { name: 'Attitude Sports', desc: 'Vêtements et chaussures de sport pour toute la famille — performance, confort et style au quotidien.', link: 'https://attitudesport.ca', logo: '/assets/attitudesport-logo.png' },
 ];
 
 export default function ThreeShops() {
   return (
     <section className="three-shops">
-      <div className="wrap">
-        <div className="three-shops-head">
-          <h2 className="three-shops-title">Nos boutiques partenaires</h2>
-          <p className="three-shops-sub">Deux univers, une même passion du vêtement bien choisi.</p>
+      <div className="wrap boutiques-wrap">
+        <div className="boutiques-head">
+          <div className="surtitre">Nos deux adresses</div>
+          <h2>Découvrez nos deux autres boutiques</h2>
+          <p>Deux autres adresses, une même passion du vêtement bien choisi.</p>
         </div>
-        <div className="three-shops-grid">
-          {SHOPS.map((s) => (
-            <a key={s.name} href={s.link} target="_blank" rel="noopener noreferrer" className="three-shops-link">
-              <div className="three-shops-card">
-                <div className="three-shops-img">
-                  <img src={s.logo} alt={s.name} className="three-shops-logo" />
-                </div>
-                <div className="three-shops-body">
-                  <div className="three-shops-tag">{s.tag}</div>
-                  <h3 className="three-shops-name">{s.name}</h3>
-                  <p className="three-shops-desc">{s.desc}</p>
-                </div>
-                <div className="three-shops-cta">
-                  Visiter {s.name}
-                  <span className="three-shops-arrow">→</span>
-                </div>
+        <div className="boutiques-grid boutiques-grid-two">
+          {BOUTIQUES.map((b) => (
+            <div className="boutique-card" key={b.name}>
+              <div className="boutique-img">
+                <img src={b.logo} alt={b.name} style={{ objectFit: 'contain', padding: '40px', background: 'var(--cream)' }} />
               </div>
-            </a>
+              <div className="boutique-body">
+                <img src={b.logo} alt="" width="40" style={{ marginBottom: '12px', opacity: '.8' }} />
+                <h3>{b.name}</h3>
+                <p>{b.desc}</p>
+                <a href={b.link} target="_blank" rel="noopener noreferrer" className="btn-outline boutique-btn">Visiter</a>
+              </div>
+            </div>
           ))}
         </div>
       </div>
