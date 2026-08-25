@@ -30,7 +30,7 @@ export default function Footer({ goShop, goAbout }) {
           <div className="ftr-col">
             <div className="ftr-col-title">Service</div>
             <ul className="ftr-col-links">
-              <li><span>Livraison partout au Québec</span></li>
+              <li><span>Livraison 25 $ · offerte dès 200 $</span></li>
               <li><span>Retour sous 30 jours</span></li>
               <li><span>Ajustements sur mesure</span></li>
               <li><span>Certificats cadeaux</span></li>

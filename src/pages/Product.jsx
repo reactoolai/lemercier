@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import { supabase, fetchProductById, fetchProducts } from '../lib/supabase.js';
 import { fmt } from '../data/products.js';
 import { setProductSEO } from '../lib/seo.js';
+import { useCart } from '../context/CartContext.jsx';
 import ProductCard from '../components/ProductCard.jsx';
 
 export default function Product(nav) {
-  const { pid, product, openProduct, toggleWish, wish, addToCart, goShop, goCategory, productRefreshKey, isAdmin, setEditingProduct } = nav;
+  const { pid, product, openProduct, toggleWish, wish, goShop, goCategory, productRefreshKey, isAdmin, setEditingProduct } = nav;
+  const { add: addToCart } = useCart();
 
   const [full, setFull] = useState(product || null);
   const [loading, setLoading] = useState(!product || product.id !== pid);
@@ -90,11 +92,14 @@ export default function Product(nav) {
   const handleAddToCart = () => {
     const img = displayImages[activeImg] || displayImages[0] || '';
     addToCart({
+      product_id: full.id,
+      sku: full.sku || '',
       name: full.name,
-      img,
-      price: full.price,
+      brand: full.brand || '',
+      image: img,
+      color: currentVariant ? (currentVariant.color_name || currentVariant.color || '') : '',
       size: selectedSize || (currentSizes[0] || ''),
-      color: currentVariant ? currentVariant.color_name : '',
+      price: full.price,
     });
     setAdded(true);
     setTimeout(() => setAdded(false), 2500);

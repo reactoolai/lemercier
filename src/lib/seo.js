@@ -21,7 +21,7 @@ export function setProductSEO(product) {
   const title = `${product.name} — ${product.brand || SITE_NAME} | ${SITE_NAME}`;
   const description = product.desc
     ? product.desc.substring(0, 155)
-    : `${product.name}${product.brand ? ' de ' + product.brand : ''}${product.cat ? ' — ' + product.cat : ''}. Disponible à Le Mercier Alma, boutique de vêtements pour homme à Alma, Québec. Livraison partout au Québec.`;
+    : `${product.name}${product.brand ? ' de ' + product.brand : ''}${product.cat ? ' — ' + product.cat : ''}. Disponible à Le Mercier Alma, boutique de vêtements pour homme à Alma, Québec. Livraison 25 $, offerte dès 200 $.`;
 
   setDocumentTitle(title);
   setMetaTag('description', description);

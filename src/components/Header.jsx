@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
+import { useCart } from '../context/CartContext.jsx';
 
-export default function Header({ goHome, goShop, goAbout, goWish, toggleCart, setQuery, search, cartCount, wishCount, allCategories, goCategory, goAdmin }) {
+export default function Header({ goHome, goShop, goAbout, goWish, toggleCart, setQuery, search, wishCount, allCategories, goCategory, goAdmin }) {
+  const { count: cartCount } = useCart();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 

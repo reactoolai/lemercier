@@ -198,7 +198,7 @@ export default function Home(nav) {
         {[['Sur mesure', 'Complets et chemises ajustés directement en boutique par nos conseillers.'],
           ['Graduation et mariage', "Un service d'habillage complet pour vos grands événements."],
           ['Certificats cadeaux', 'Le cadeau parfait, offert en ligne et en boutique.'],
-          ['Livraison et retour', 'Livraison partout au Québec, retour facile sous 30 jours.']].map(([t, d]) => (
+          ['Livraison et retour', 'Livraison 25 $, offerte dès 200 $. Retour facile sous 30 jours.']].map(([t, d]) => (
           <div key={t} className="service"><div className="service-title">{t}</div><p>{d}</p></div>
         ))}
       </section>
