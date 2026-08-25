@@ -34,10 +34,10 @@ export default function ThreeShops() {
                   <div className="three-shops-tag">{s.tag}</div>
                   <h3 className="three-shops-name">{s.name}</h3>
                   <p className="three-shops-desc">{s.desc}</p>
-                </div>
-                <div className="three-shops-cta">
-                  Visiter {s.name}
-                  <span className="three-shops-arrow">→</span>
+                  <div className="three-shops-cta">
+                    Visiter le site
+                    <span className="three-shops-arrow">→</span>
+                  </div>
                 </div>
               </div>
             </a>
