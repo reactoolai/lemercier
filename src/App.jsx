@@ -13,13 +13,16 @@ import About from './pages/About.jsx';
 import Admin from './pages/Admin.jsx';
 import Checkout from './pages/Checkout.jsx';
 import OrderConfirmation from './pages/OrderConfirmation.jsx';
+import SearchResults from './pages/SearchResults.jsx';
 import ProductEditModal from './components/ProductEditModal.jsx';
+import { searchByExactSkuOrId } from './lib/supabase.js';
 
 export default function App() {
   const [view, setView] = useState('home');
   const [section, setSection] = useState(null);
   const [pid, setPid] = useState('1');
   const [confirmOrderNumber, setConfirmOrderNumber] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const applyHash = () => {
@@ -42,6 +45,10 @@ export default function App() {
         setView('admin');
       } else if (hash === '#/commande') {
         setView('checkout');
+      } else if (hash.startsWith('#/recherche')) {
+        const params = new URLSearchParams(hash.split('?')[1] || '');
+        setSearchQuery(params.get('q') || '');
+        setView('search');
       } else if (!hash || hash === '#/') {
         setView('home');
       }
@@ -129,6 +136,20 @@ export default function App() {
     goAdmin: () => { window.location.hash = '#/admin'; setView('admin'); },
     goWish: () => { window.location.hash = '#/liste'; setView('wish'); },
     goCheckout: () => { window.location.hash = '#/commande'; setView('checkout'); },
+    goSearch: async (q) => {
+      if (!q || !q.trim()) return;
+      const trimmed = q.trim();
+      const exactId = await searchByExactSkuOrId(trimmed);
+      if (exactId) {
+        window.location.hash = '#/produit/' + encodeURIComponent(exactId);
+        setPid(exactId);
+        setView('product');
+      } else {
+        setSearchQuery(trimmed);
+        window.location.hash = '#/recherche?q=' + encodeURIComponent(trimmed);
+        setView('search');
+      }
+    },
     openProduct: id => { window.location.hash = '#/produit/' + encodeURIComponent(id); setPid(id); setView('product'); },
     toggleCart: () => setCartOpen(o => !o),
     setQuery: q => { setSearch(q); setPage(0); setView('shop'); },
@@ -175,6 +196,7 @@ export default function App() {
         {view === 'admin' && <Admin {...nav} />}
         {view === 'checkout' && <Checkout nav={nav} />}
         {view === 'confirmation' && <OrderConfirmation nav={nav} orderNumber={confirmOrderNumber} />}
+        {view === 'search' && <SearchResults nav={nav} query={searchQuery} />}
         <Footer goShop={nav.goShop} goAbout={nav.goAbout} />
         {cartOpen && <CartDrawer close={() => setCartOpen(false)} goCheckout={nav.goCheckout} />}
         {editingProduct && <ProductEditModal product={editingProduct} onSaved={handleProductSaved} onClose={() => setEditingProduct(null)} />}

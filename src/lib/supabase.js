@@ -20,7 +20,13 @@ export async function fetchProducts(opts = {}) {
   }
 
   if (brand) query = query.eq('brand', brand);
-  if (search) query = query.or(`name.ilike.%${search}%,brand.ilike.%${search}%,cat.ilike.%${search}%`);
+  if (search) {
+    const escaped = escapeSearchTerm(search);
+    if (escaped) {
+      const orParts = buildMultiWordOr(escaped);
+      query = query.or(orParts);
+    }
+  }
   if (inStockOnly) query = query.gt('stock', 0);
   if (priceMin != null) query = query.gte('price', priceMin);
   if (priceMax != null) query = query.lte('price', priceMax);
@@ -42,6 +48,46 @@ export async function fetchProducts(opts = {}) {
     })),
     total: count || 0,
   };
+}
+
+function escapeSearchTerm(term) {
+  return term.replace(/[%(),]/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+function buildMultiWordOr(term) {
+  const words = term.split(' ').filter(Boolean);
+  if (words.length === 0) return '';
+  const fields = ['name', 'brand', 'cat', 'sku', 'desc', 'color'];
+  if (words.length === 1) {
+    return fields.map(f => `${f}.ilike.%${words[0]}%`).join(',');
+  }
+  const parts = [];
+  for (const w of words) {
+    parts.push(`(${fields.map(f => `${f}.ilike.%${w}%`).join(',')})`);
+  }
+  return parts.join('&');
+}
+
+export async function searchByExactSkuOrId(term) {
+  const cleaned = term.replace(/[\s-]/g, '').trim();
+  if (!cleaned) return null;
+  const { data: bySku } = await supabase.from('products').select('id').eq('sku', cleaned).maybeSingle();
+  if (bySku) return bySku.id;
+  const { data: byId } = await supabase.from('products').select('id').eq('id', cleaned).maybeSingle();
+  if (byId) return byId.id;
+  return null;
+}
+
+export async function searchSuggestions(term, max = 8) {
+  const escaped = escapeSearchTerm(term);
+  if (!escaped || escaped.length < 2) return [];
+  const { data, error } = await supabase
+    .from('products')
+    .select('id,name,brand,sku,img,price')
+    .or(buildMultiWordOr(escaped))
+    .limit(max);
+  if (error) return [];
+  return data || [];
 }
 
 export async function fetchBrands(section = null) {

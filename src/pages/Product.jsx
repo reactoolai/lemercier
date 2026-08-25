@@ -17,6 +17,7 @@ export default function Product(nav) {
   const [selectedSize, setSelectedSize] = useState('');
   const [activeImg, setActiveImg] = useState(0);
   const [added, setAdded] = useState(false);
+  const [copiedSku, setCopiedSku] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -212,6 +213,17 @@ export default function Product(nav) {
                 <tr><th>Marque</th><td>{full.brand || '—'}</td></tr>
                 <tr><th>Catégorie</th><td>{full.cat || '—'}</td></tr>
                 <tr><th>Prix</th><td>{fmt(full.price)}</td></tr>
+                {full.sku && (
+                  <tr>
+                    <th>Réf.</th>
+                    <td>
+                      <span className="product-sku">{full.sku}</span>
+                      <button className="product-sku-copy" onClick={() => { navigator.clipboard?.writeText(full.sku); setCopiedSku(true); setTimeout(() => setCopiedSku(false), 2000); }}>
+                        {copiedSku ? '✓ Copié' : 'Copier'}
+                      </button>
+                    </td>
+                  </tr>
+                )}
                 {full.sizes && full.sizes.length > 0 && (
                   <tr><th>Tailles</th><td>{full.sizes.join(', ')}</td></tr>
                 )}
