@@ -14,6 +14,10 @@ import Product from './pages/Product.jsx';
 import Wishlist from './pages/Wishlist.jsx';
 import About from './pages/About.jsx';
 import Contact from './pages/Contact.jsx';
+import Privacy from './pages/Privacy.jsx';
+import ShippingReturns from './pages/ShippingReturns.jsx';
+import ThreeShops from './components/ThreeShops.jsx';
+import Newsletter from './components/Newsletter.jsx';
 import Admin from './pages/Admin.jsx';
 import Checkout from './pages/Checkout.jsx';
 import OrderConfirmation from './pages/OrderConfirmation.jsx';
@@ -233,6 +237,10 @@ export default function App() {
         {route.name === 'checkout' && <Checkout nav={nav} />}
         {route.name === 'confirmation' && <OrderConfirmation nav={nav} orderNumber={confirmOrderNumber} />}
         {route.name === 'search' && <SearchResults nav={nav} query={searchQuery} />}
+        {route.name === 'privacy' && <Privacy goHome={nav.goHome} />}
+        {route.name === 'shipping' && <ShippingReturns goHome={nav.goHome} />}
+        {route.name !== 'admin' && <ThreeShops />}
+        {route.name !== 'admin' && <Newsletter />}
         <Footer goShop={nav.goShop} goAbout={nav.goAbout} goContact={nav.goContact} />
         {cartOpen && <CartDrawer close={() => setCartOpen(false)} goCheckout={nav.goCheckout} />}
         {editingProduct && <ProductEditModal product={editingProduct} onSaved={handleProductSaved} onClose={() => setEditingProduct(null)} />}

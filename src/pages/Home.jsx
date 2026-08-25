@@ -263,12 +263,6 @@ export default function Home(nav) {
           </div>
         </div>
       </section>
-
-      <section className="newsletter">
-        <h2>Inscrivez-vous à notre infolettre</h2>
-        <p>Nouveautés, soldes et événements en boutique.</p>
-        <div className="nl-row"><input placeholder="Votre courriel" /><button className="btn-primary">S'INSCRIRE</button></div>
-      </section>
     </main>
   );
 }

@@ -40,6 +40,8 @@ const ROUTES = {
   product: /^\/produit\/(.+)$/,
   about: /^\/a-propos$/,
   contact: /^\/nous-joindre$/,
+  privacy: /^\/confidentialite$/,
+  shipping: /^\/livraison-et-retours$/,
   wishlist: /^\/liste-de-souhaits$/,
   admin: /^\/admin$/,
   checkout: /^\/commande$/,

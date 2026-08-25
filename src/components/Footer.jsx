@@ -1,3 +1,5 @@
+import { navigate } from '../lib/router.js';
+
 export default function Footer({ goShop, goAbout, goContact }) {
   return (
     <footer className="ftr">
@@ -31,7 +33,7 @@ export default function Footer({ goShop, goAbout, goContact }) {
             <div className="ftr-col-title">Service</div>
             <ul className="ftr-col-links">
               <li><span>Livraison 25 $ · offerte dès 200 $</span></li>
-              <li><span>Retour sous 30 jours</span></li>
+              <li><span onClick={() => navigate('/livraison-et-retours')} style={{ cursor: 'pointer' }}>Livraison et retours</span></li>
               <li><span>Ajustements sur mesure</span></li>
               <li><span>Certificats cadeaux</span></li>
             </ul>
@@ -42,6 +44,7 @@ export default function Footer({ goShop, goAbout, goContact }) {
             <ul className="ftr-col-links ftr-contact">
               <li className="ftr-addr"><span onClick={goContact} style={{ cursor: 'pointer' }}>630 Rue Sacré-Coeur O, Alma, QC</span></li>
               <li><a href="tel:+14186623240">(418) 662-3240</a></li>
+              <li><a href="mailto:info@lechoixdesophie.com">info@lechoixdesophie.com</a></li>
               <li className="ftr-hours">
                 <span className="ftr-hours-day">Lun–Mer</span> 9h30–17h30<br />
                 <span className="ftr-hours-day">Jeu–Ven</span> 9h30–21h<br />
@@ -53,12 +56,23 @@ export default function Footer({ goShop, goAbout, goContact }) {
         </div>
       </div>
 
+      <div className="ftr-shops">
+        <div className="wrap">
+          <span className="ftr-shops-label">Nos boutiques :</span>
+          <span className="ftr-shops-link" onClick={() => navigate('/')}>Le Mercier Alma</span>
+          <span className="ftr-shops-sep">·</span>
+          <a className="ftr-shops-link" href="https://lechoixdesophie.com" target="_blank" rel="noopener noreferrer">Le Choix de Sophie</a>
+          <span className="ftr-shops-sep">·</span>
+          <a className="ftr-shops-link" href="https://attitudesport.ca" target="_blank" rel="noopener noreferrer">Attitude Sports</a>
+        </div>
+      </div>
+
       <div className="ftr-bottom">
         <div className="wrap ftr-bottom-row">
           <div className="ftr-copy">© {new Date().getFullYear()} Le Mercier Alma — Tous droits réservés</div>
           <div className="ftr-bottom-links">
-            <span>Politique de confidentialité</span>
-            <span>Livraison et retour</span>
+            <span onClick={() => navigate('/confidentialite')} style={{ cursor: 'pointer' }}>Politique de confidentialité</span>
+            <span onClick={() => navigate('/livraison-et-retours')} style={{ cursor: 'pointer' }}>Livraison et retour</span>
           </div>
           <a className="ftr-powered" href="https://reactool.ai" target="_blank" rel="noopener noreferrer" aria-label="Propulsé par Reactool AI">
             <span>Propulsé par</span>
