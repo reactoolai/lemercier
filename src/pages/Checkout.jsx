@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { fmt } from '../data/products.js';
 import { useCart } from '../context/CartContext.jsx';
 import { setPageSEO } from '../lib/seo.js';
+import { navigate } from '../lib/router.js';
 
 const SQUARE_SCRIPT = 'https://web.squarecdn.com/v1/square.js';
 
@@ -144,7 +145,7 @@ export default function Checkout({ nav, orderNumber }) {
       }
 
       clear();
-      window.location.hash = '#/commande/confirmation/' + encodeURIComponent(data.order_number);
+      navigate('/commande/confirmation/' + encodeURIComponent(data.order_number));
     } catch (e) {
       console.error('Checkout error:', e);
       setProcessing(false);
@@ -301,3 +302,6 @@ export default function Checkout({ nav, orderNumber }) {
     </main>
   );
 }
+
+
+export default Checkout

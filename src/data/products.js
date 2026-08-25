@@ -1,5 +1,5 @@
 const U = 'https://lemerciersg.com/wp-content/uploads/';
-export const FREE_SHIPPING = 150;
+export const FREE_SHIPPING = 200;
 export const products = [
   { id: '1', name: '26HN504 | Chemise NZA', brand: 'NZA New Zealand', cat: 'Chemises', price: 125, color: 'Grey Brown', sizes: ['M','G','TG','TTG'], img: U + '2026/08/26HN504-1-GREY_BROWN-0-dd95f0f656394f63be8e352c6a6a7c6e-650x813.jpg' },
   { id: '2', name: '26GN67632 | Pantalon NZA', brand: 'NZA New Zealand', cat: 'Pantalons', price: 169, color: 'Light Grey', sizes: ['M','G','TG','TTG'], img: U + '2026/08/26GN67632-1-LIGHT_GREY-0-d52efd7714a54b64915ab32cd015429a-400x400.jpg' },

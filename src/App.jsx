@@ -221,7 +221,7 @@ export default function App() {
     }
   };
 
-  const prod = products.find(p => String(p.id) === String(pid)) || products[0];
+  const prod = pid ? (products.find(p => String(p.id) === String(pid)) || null) : null;
 
   return (
     <CartProvider>

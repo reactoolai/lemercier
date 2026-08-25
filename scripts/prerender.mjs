@@ -136,6 +136,8 @@ async function main() {
     { loc: SITE_URL + '/boutique', priority: '0.9' },
     { loc: SITE_URL + '/a-propos', priority: '0.5' },
     { loc: SITE_URL + '/nous-joindre', priority: '0.5' },
+    { loc: SITE_URL + '/confidentialite', priority: '0.3' },
+    { loc: SITE_URL + '/livraison-et-retours', priority: '0.3' },
   ];
 
   const categories = new Set();
@@ -165,6 +167,8 @@ async function main() {
 
   writePage('a-propos', buildPageSEO('À propos', 'Le Mercier Alma — boutique de vêtements pour homme à Alma, Québec. Née à Saint-Georges de Beauce, la boutique offre marques sélectionnées, service personnalisé et ajustements sur mesure.', '/a-propos'));
   writePage('nous-joindre', buildPageSEO('Nous joindre', 'Contactez Le Mercier Alma — 630 Rue Sacré-Coeur O, Alma, Québec. Téléphone, courriel, heures d\'ouverture et réseaux sociaux.', '/nous-joindre'));
+  writePage('confidentialite', buildPageSEO('Politique de confidentialité', 'Politique de confidentialité — Le Mercier Alma. Protection de vos données personnelles.', '/confidentialite'));
+  writePage('livraison-et-retours', buildPageSEO('Livraison et retours', 'Livraison 25 $, offerte dès 200 $. Retour facile sous 30 jours. — Le Mercier Alma.', '/livraison-et-retours'));
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
