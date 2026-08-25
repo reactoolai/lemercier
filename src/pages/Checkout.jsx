@@ -302,6 +302,3 @@ export default function Checkout({ nav, orderNumber }) {
     </main>
   );
 }
-
-
-export default Checkout
