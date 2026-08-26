@@ -678,6 +678,7 @@ input { font-family: 'Jost', sans-serif; outline: none; }
 }
 @media (max-width: 560px) {
   .checkout-fields { grid-template-columns: 1fr; }
+}
 
 /* Admin tabs */
 .admin-tabs { display: flex; gap: 0; margin-bottom: 24px; border-bottom: 1px solid var(--line); }
@@ -881,4 +882,3 @@ input { font-family: 'Jost', sans-serif; outline: none; }
 .legal-page { padding-top: 32px; max-width: 800px; }
 .legal-content h2 { font-family: 'Marcellus', serif; font-size: 20px; color: var(--navy); margin: 28px 0 12px; }
 .legal-content p { font-size: 15px; color: #5A6070; line-height: 1.8; margin: 0 0 12px; }
-}
