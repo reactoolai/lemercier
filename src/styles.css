@@ -822,29 +822,32 @@ input { font-family: 'Jost', sans-serif; outline: none; }
 }
 
 /* Three shops */
-.three-shops { background: var(--cream); padding: 64px 0; }
-.three-shops-head { text-align: center; margin-bottom: 40px; }
-.three-shops-title { font-family: 'Marcellus', serif; font-size: 30px; color: var(--navy); margin: 0 0 8px; }
-.three-shops-sub { font-size: 16px; color: var(--muted); margin: 0; }
-.three-shops-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; max-width: 960px; margin: 0 auto; }
-.three-shops-link { text-decoration: none; color: inherit; }
-.three-shops-card { background: #fff; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; display: flex; align-items: stretch; transition: transform .2s, box-shadow .2s, border-color .2s; }
-.three-shops-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(20,36,58,.1); border-color: var(--navy); }
-.three-shops-img { flex-shrink: 0; width: 96px; display: flex; align-items: center; justify-content: center; background: #F5F4EF; padding: 14px 10px; box-sizing: border-box; }
-.three-shops-logo { width: 100%; max-height: 64px; object-fit: contain; filter: grayscale(15%); transition: filter .3s; }
-.three-shops-card:hover .three-shops-logo { filter: grayscale(0%); }
-.three-shops-body { flex: 1; padding: 18px 20px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-.three-shops-tag { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-.three-shops-name { font-family: 'Marcellus', serif; font-size: 17px; color: var(--navy); margin: 0; }
-.three-shops-desc { font-size: 13px; color: #5A6070; line-height: 1.5; margin: 0; }
-.three-shops-cta { margin-top: 8px; font-size: 13px; color: var(--navy); font-weight: 500; display: inline-flex; align-items: center; gap: 6px; }
+.three-shops { display: block; width: 100%; background: #F5F4EF; padding: 56px 0; }
+.three-shops-head { text-align: center; margin: 0 auto 28px; }
+.three-shops-title { font-family: 'Marcellus', serif; font-size: 30px; line-height: 1.2; color: #1B3560; margin: 0 0 8px; }
+.three-shops-sub { font-size: 15px; line-height: 1.5; color: #6F7680; margin: 0; }
+.three-shops-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; max-width: 960px; margin: 0 auto; }
+.three-shops-link { display: block; min-width: 0; text-decoration: none; color: inherit; }
+.three-shops-card { min-height: 176px; background: #fff; border: 1px solid #E0E1DC; border-radius: 12px; overflow: hidden; display: flex; align-items: stretch; transition: transform .2s, box-shadow .2s, border-color .2s; }
+.three-shops-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(20,36,58,.1); border-color: #1B3560; }
+.three-shops-img { flex: 0 0 112px; width: 112px; height: auto; min-height: 176px; display: flex; align-items: center; justify-content: center; background: #ECECE8; padding: 16px 12px; }
+.three-shops-logo { display: block; width: 88px; height: 88px; object-fit: contain; filter: grayscale(15%); transition: filter .3s, transform .2s; }
+.three-shops-card:hover .three-shops-logo { filter: grayscale(0%); transform: scale(1.04); }
+.three-shops-body { flex: 1; min-width: 0; padding: 20px 18px; display: flex; flex-direction: column; align-items: flex-start; gap: 5px; }
+.three-shops-tag { font-size: 10px; line-height: 1.2; letter-spacing: .12em; text-transform: uppercase; color: #7C838C; }
+.three-shops-name { font-family: 'Marcellus', serif; font-size: 18px; line-height: 1.25; color: #1B3560; margin: 0; }
+.three-shops-desc { font-size: 13px; line-height: 1.5; color: #5A6070; margin: 0; }
+.three-shops-cta { margin-top: auto; padding-top: 8px; font-size: 13px; line-height: 1.2; color: #1B3560; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; }
 .three-shops-arrow { transition: transform .2s; }
 .three-shops-card:hover .three-shops-arrow { transform: translateX(4px); }
 
 @media (max-width: 600px) {
-  .three-shops-grid { grid-template-columns: 1fr; }
-  .three-shops-img { width: 80px; }
-  .three-shops-logo { max-height: 56px; }
+  .three-shops { padding: 40px 0; }
+  .three-shops-grid { grid-template-columns: 1fr; gap: 16px; }
+  .three-shops-card { min-height: 152px; }
+  .three-shops-img { flex-basis: 88px; width: 88px; min-height: 152px; }
+  .three-shops-logo { width: 68px; height: 68px; }
+  .three-shops-body { padding: 16px 14px; }
 }
 
 /* Newsletter (global) */
