@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase.js';
 import { fmt } from '../data/products.js';
 import { useCart } from '../context/CartContext.jsx';
+import { slugify } from '../lib/router.js';
 
 export default function ProductCard({ p, openProduct, toggleWish, wish, isAdmin, setEditingProduct }) {
   const wished = wish.includes(p.id);
@@ -17,8 +18,9 @@ export default function ProductCard({ p, openProduct, toggleWish, wish, isAdmin,
     });
   }, [p.id]);
 
+  const slug = `${p.id}-${slugify(p.name)}`;
   return (
-    <div className="card" onClick={() => openProduct(p.id)}>
+    <a className="card" href={`/produit/${slug}`} onClick={(e) => { e.preventDefault(); openProduct(p.id); }}>
       <div className="card-img">
         {displayImg ? (
           <img src={displayImg} alt={p.name} loading="lazy" />
@@ -28,13 +30,13 @@ export default function ProductCard({ p, openProduct, toggleWish, wish, isAdmin,
           </div>
         )}
         {isAdmin && (
-          <button className="card-edit-btn" onClick={e => { e.stopPropagation(); setEditingProduct(p); }}>✎ Modifier</button>
+          <button className="card-edit-btn" onClick={e => { e.stopPropagation(); e.preventDefault(); setEditingProduct(p); }}>✎ Modifier</button>
         )}
-        <button className={'wish-btn' + (wished ? ' on' : '')} onClick={e => { e.stopPropagation(); toggleWish(p.id); }}>{wished ? '♥' : '♡'}</button>
+        <button className={'wish-btn' + (wished ? ' on' : '')} onClick={e => { e.stopPropagation(); e.preventDefault(); toggleWish(p.id); }}>{wished ? '♥' : '♡'}</button>
         {p.stock === 0 && <span className="stock-badge">Épuisé</span>}
         {p.stock > 0 && p.stock <= 3 && <span className="stock-badge low">Bientôt épuisé</span>}
         {inStock && (
-          <button className="card-add-btn" onClick={e => { e.stopPropagation(); addToCart({ product_id: p.id, sku: p.sku || '', name: p.name, brand: p.brand || '', image: displayImg, color: '', size: (p.sizes && p.sizes[0]) || '', price: p.price }); }}>
+          <button className="card-add-btn" onClick={e => { e.stopPropagation(); e.preventDefault(); addToCart({ product_id: p.id, sku: p.sku || '', name: p.name, brand: p.brand || '', image: displayImg, color: '', size: (p.sizes && p.sizes[0]) || '', price: p.price }); }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
@@ -71,6 +73,6 @@ export default function ProductCard({ p, openProduct, toggleWish, wish, isAdmin,
           })()}
         </div>
       )}
-    </div>
+    </a>
   );
 }

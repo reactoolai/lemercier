@@ -82,7 +82,7 @@ input { font-family: 'Jost', sans-serif; outline: none; }
 .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px; margin-top: 28px; }
 .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; padding-top: 56px; }
 /* Cards */
-.card { cursor: pointer; }
+.card { cursor: pointer; text-decoration: none; color: inherit; display: block; }
 .card-img { background: #F0F0EB; aspect-ratio: 4/5; overflow: hidden; position: relative; }
 .card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .wish-btn { position: absolute; top: 10px; right: 10px; width: 34px; height: 34px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255,255,255,.92); color: var(--navy); font-size: 16px; display: flex; align-items: center; justify-content: center; padding: 0; }

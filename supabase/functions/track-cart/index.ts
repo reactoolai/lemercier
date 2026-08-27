@@ -32,6 +32,7 @@ Deno.serve(async (req: Request) => {
     const itemsCount = itemsArr.reduce((sum: number, it: any) => sum + (it.quantity || 1), 0);
 
     const update: Record<string, any> = {
+      cart_token,
       items: itemsArr,
       items_count: itemsCount,
       subtotal: subtotal ?? 0,
